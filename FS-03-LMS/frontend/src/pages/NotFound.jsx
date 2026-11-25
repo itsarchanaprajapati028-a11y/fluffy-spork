@@ -1,13 +1,13 @@
 import { Link } from 'react-router-dom';
 import { Button } from '../components/Button';
-import { HomeIcon, SearchIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, MagnifyingGlassIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
 
 export function NotFound() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
       <div className="max-w-md w-full text-center space-y-8">
         <div className="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center">
-          <SearchIcon className="h-12 w-12 text-gray-400" />
+          <MagnifyingGlassIcon className="h-12 w-12 text-gray-400" />
         </div>
         
         <div>

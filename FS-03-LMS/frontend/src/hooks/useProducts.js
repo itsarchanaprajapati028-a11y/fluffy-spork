@@ -1,0 +1,1 @@
+export { useCourses, useCourses as default } from './useCourses';

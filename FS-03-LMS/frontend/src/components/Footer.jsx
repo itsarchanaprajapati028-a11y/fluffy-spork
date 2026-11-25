@@ -69,7 +69,7 @@ export default function Footer() {
                     {link.label}
                   </Link>
                 </li>
-              )}
+              ))}
             </ul>
           </div>
           

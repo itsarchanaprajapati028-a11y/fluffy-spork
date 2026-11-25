@@ -4,6 +4,10 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  esbuild: {
+    loader: 'tsx',
+    include: /\.(jsx?|tsx?)$/,
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

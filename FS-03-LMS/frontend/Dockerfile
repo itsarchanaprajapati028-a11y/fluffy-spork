@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-RUN npm run build || (mkdir -p dist && echo '<html><body>Build failed</body></html>' > dist/index.html)
+RUN npm run build
 
 # Production stage
 FROM nginx:alpine

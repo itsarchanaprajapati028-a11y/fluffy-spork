@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from './slices/authSlice';
-import courseReducer from './slices/courseSlice';
-import enrollmentReducer from './slices/enrollmentSlice';
-import quizReducer from './slices/quizSlice';
-import liveClassReducer from './slices/liveClassSlice';
-import certificateReducer from './slices/certificateSlice';
-import uiReducer from './slices/uiSlice';
+import authReducer from '../slices/authSlice';
+import courseReducer from '../slices/courseSlice';
+import enrollmentReducer from '../slices/enrollmentSlice';
+import quizReducer from '../slices/quizSlice';
+import liveClassReducer from '../slices/liveClassSlice';
+import certificateReducer from '../slices/certificateSlice';
+import uiReducer from '../slices/uiSlice';
 
 export const store = configureStore({
   reducer: {

@@ -219,8 +219,8 @@ export function Register() {
                 <li>{/[0-9]/.test(formData.password) ? '✓' : '✗'} Number</li>
                 <li>{/[^A-Za-z0-9]/.test(formData.password) ? '✓' : '✗'} Special character</li>
               </ul>
-            )}
-          </div>
+            </div>
+          )}
           
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

@@ -72,7 +72,8 @@ export function ResetPassword() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4">
         <div className="max-w-md w-full text-center">
           <h2 className="text-xl font-bold text-gray-900">Invalid Reset Link</h2>
-          <p className="mt-2 text-gray-600">This password reset link is invalid or has expired.</          <Link to="/forgot-password" className="mt-6 btn-primary inline-block">Request New Link</Link>
+          <p className="mt-2 text-gray-600">This password reset link is invalid or has expired.</p>
+          <Link to="/forgot-password" className="mt-6 btn-primary inline-block">Request New Link</Link>
         </div>
       </div>
     );
@@ -153,8 +154,8 @@ export function ResetPassword() {
                   />
                 </div>
                 <p className="text-xs text-gray-500">Password strength: {getStrengthLabel()}</p>
-              )}
-            </div>
+              </div>
+            )}
             
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

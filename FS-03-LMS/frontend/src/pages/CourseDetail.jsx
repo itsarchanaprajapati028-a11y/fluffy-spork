@@ -382,8 +382,7 @@ export function CourseDetail() {
           </div>
         </div>
       )}
-    </div>
-    
+
     <Modal
       isOpen={showImageModal}
       onClose={() => setShowImageModal(false)}
@@ -416,6 +415,7 @@ export function CourseDetail() {
         </div>
       </div>
     </Modal>
+    </div>
   );
 }
 

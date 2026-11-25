@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../../hooks/useCart';
-import { useAuth } from '../../hooks/useAuth';
-import { useOrders } from '../../hooks/useOrders';
-import { Button } from '../../components/Button';
-import { FormFields } from '../../components/FormFields';
-import { Card, CardHeader, CardBody } from '../../components/Card';
-import { formatPrice } from '../../utils/helpers';
+import { useCart } from '../hooks/useCart';
+import { useAuth } from '../hooks/useAuth';
+import { useOrders } from '../hooks/useOrders';
+import { Button } from '../components/Button';
+import FormFields from '../components/FormFields';
+import { Card, CardHeader, CardBody } from '../components/Card';
+import { formatPrice } from '../utils/helpers';
 import { CreditCardIcon, ShieldCheckIcon, TruckIcon, CheckCircleIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const paymentMethods = [
   { id: 'stripe', name: 'Credit/Debit Card', icon: CreditCardIcon, description: 'Visa, Mastercard, Amex' },

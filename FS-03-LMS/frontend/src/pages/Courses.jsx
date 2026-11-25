@@ -3,8 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { useCourses } from '../hooks/useCourses';
 import ProductCard from '../components/ProductCard';
 import { Button } from '../components/Button';
-import { FormFields } from '../components/FormFields';
-import { XMarkIcon, ChevronDownIcon, FilterIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import FormFields from '../components/FormFields';
+import { XMarkIcon, ChevronDownIcon, FunnelIcon as FilterIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const sortOptions = [
@@ -417,6 +417,7 @@ export function Courses() {
             </div>
           )}
         </div>
+      </main>
       </div>
     </div>
   );

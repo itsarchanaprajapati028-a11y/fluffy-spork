@@ -9,7 +9,7 @@ RUN npm install --legacy-peer-deps
 # Copy entire project and use .dockerignore to exclude unnecessary files
 COPY . .
 
-RUN npm run build || (mkdir -p dist && echo '<html><body>Build failed</body></html>' > dist/index.html)
+RUN npm run build
 
 # Production stage
 FROM nginx:alpine
