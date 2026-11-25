@@ -1,0 +1,8 @@
+FROM dsa-homepage:latest
+USER root
+RUN apk add --no-cache docker-cli docker-cli-compose
+COPY docker-compose.yml /app/docker-compose.yml
+COPY . /app/
+WORKDIR /app
+EXPOSE 80 5173 5174 5000 5001
+CMD ["sh", "-c", "docker-compose up -d && nginx -g 'daemon off;'"]

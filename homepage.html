@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full-Stack Projects Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 16l4-16M6 9a3 3 0 00-3 3v10a3 3 0 003 3h12a3 3 0 003-3v-10a3 3 0 00-3-3H6z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold text-gray-900">Full-Stack Projects Hub</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <select class="form-select border border-gray-300 rounded px-2 py-1 text-sm" id="project-selector">
+                            <option value="fs01">FS-01: E-Commerce</option>
+                            <option value="fs03">FS-03: LMS</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+            <!-- Project Selector -->
+            <section class="mb-8">
+                <div class="max-w-3xl mx-auto">
+                    <div class="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Select Project to Work On</h3>
+                        <p class="text-gray-600 mb-6">Choose which project you'd like to access and make your changes</p>
+                        <div class="flex flex-col space-y-4">
+                            <a href="http://localhost:5173" target="_blank" class="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold text-center hover:bg-blue-700 transition-colors">
+                                <svg class="w-10 h-10 mx-auto mb-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                                </svg>
+                                <h4 class="font-semibold text-gray-900 mb-1">FS-01 Frontend</h4>
+                                <p class="text-sm text-gray-500">http://localhost:5173</p>
+                            </a>
+                            <a href="http://localhost:5174" target="_blank" class="bg-purple-600 text-white py-3 px-4 rounded-lg font-semibold text-center hover:bg-purple-700 transition-colors">
+                                <svg class="w-10 h-10 mx-auto mb-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                </svg>
+                                <h4 class="font-semibold text-gray-900 mb-1">FS-03 Frontend</h4>
+                                <p class="text-sm text-gray-500">http://localhost:5174</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Hero Section -->
+            <section class="text-center mb-16">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                    Your Full-Stack Development Playground
+                </h1>
+                <p class="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                    Explore two production-ready full-stack applications built with modern technologies.
+                    Each project demonstrates real-world patterns for authentication, payments, real-time features, and scalable architecture.
+                </p>
+            </section>
+
+            <!-- Project Cards -->
+            <section class="grid md:grid-cols-2 gap-8 mb-16">
+                <!-- FS-01 E-Commerce -->
+                <article class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden card-hover transition-all duration-300 h-full flex flex-col">
+                    <div class="relative h-48 bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700">
+                        <div class="absolute inset-0 bg-black/20"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                            </svg>
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 text-white text-sm font-medium">
+                            <span class="inline-flex items-center gap-1">
+                                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                Live
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-semibold">E-Commerce</span>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">MERN Stack</span>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-3">FS-01: Multi-Vendor Marketplace</h2>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            A complete multi-vendor e-commerce platform with split payments, vendor dashboards, 
+                            real-time search, and admin panel. Built for scale with modern architecture patterns.
+                        </p>
+                        <ul class="space-y-2 mb-6 border-t border-gray-100 pt-4">
+                            <li class="flex items-center gap-2 text-sm text-gray-600">
+                                <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+                                JWT Authentication with Roles (Customer/Vendor/Admin)
+                            </li>
+                            <li class="flex items-center gap-2 text-sm text-gray-600">
+                                <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+                                Stripe Connect Split Payments & Vendor Payouts
+                            </li>
+                            <li class="flex items-center gap-2 text-sm text-gray-600">
+                                <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+                                Elasticsearch Full-Text Search & Redis Caching
+                            </li>
+                            <li class="flex items-center gap-2 text-sm text-gray-600">
+                                <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+                                Vendor Dashboard & Admin Panel
+                            </li>
+                        </ul>
+                        <div class="flex gap-3 pt-4">
+                            <a href="http://localhost:5173" target="_blank" class="flex-1 bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold text-center hover:bg-blue-700 transition-colors">
+                                Launch E-Commerce
+                            </a>
+                            <a href="http://localhost:5000/api/v1/health" target="_blank" class="px-6 py-3 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+                                API Docs
+                            </a>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- FS-03 LMS -->
+                <article class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden card-hover transition-all duration-300 h-full flex flex-col">
+                    <div class="relative h-48 bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-700">
+                        <div class="absolute inset-0 bg-black/20"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-white/90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            </svg>
+                        </div>
+                        <div class="absolute top-4 right-4 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1 text-white text-sm font-medium">
+                            <span class="inline-flex items-center gap-1">
+                                <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                Live
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-semibold">LMS</span>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs">MERN + WebRTC</span>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-900 mb-3">FS-03: Learning Management System</h2>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            A comprehensive LMS with live classes via WebRTC, video streaming, quizzes, 
+                            certificates, and instructor analytics. Real-time collaboration features included.
+                        </p>
+                        <ul class="space-y-2 mb-6 border-t border-gray-100 pt-4">
+                            <li class="flex items-center gap-2 text-sm text-gray-600">
+                                <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+                                LiveKit WebRTC Live Classes with Chat & Recording
+                            </li>
+                            <li class="flex items-center gap-2 text-sm text-gray-600">
+                                <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+                                Video.js HLS/DASH Streaming & FFmpeg Transcoding
+                            </li>
+                            <li class="flex items-center gap-2 text-sm text-gray-600">
+                                <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+                                Auto-Graded Quizzes & PDF Certificate Generation
+                            </li>
+                            <li class="flex items-center gap-2 text-sm text-gray-600">
+                                <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>
+                                Instructor Dashboard & BullMQ Background Jobs
+                            </li>
+                        </ul>
+                        <div class="flex gap-3 pt-4">
+                            <a href="http://localhost:5174" target="_blank" class="flex-1 bg-purple-600 text-white py-3 px-4 rounded-lg font-semibold text-center hover:bg-purple-700 transition-colors">
+                                Launch LMS
+                            </a>
+                            <a href="http://localhost:5001/api/v1/health" target="_blank" class="px-6 py-3 border border-gray-300 rounded-lg font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
+                                API Docs
+                            </a>
+                        </div>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Tech Stack -->
+            <section class="mb-16">
+                <h3 class="text-2xl font-bold text-gray-900 text-center mb-8">Shared Technology Stack</h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 max-w-5xl mx-auto">
+                    <div class="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-blue-200 transition-colors">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="MongoDB" class="w-10 h-10 mx-auto mb-2">
+                        <p class="text-sm font-medium text-gray-700">MongoDB</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-blue-200 transition-colors">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" alt="Redis" class="w-10 h-10 mx-auto mb-2">
+                        <p class="text-sm font-medium text-gray-700">Redis</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-blue-200 transition-colors">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/minio/minio-original.svg" alt="MinIO" class="w-10 h-10 mx-auto mb-2">
+                        <p class="text-sm font-medium text-gray-700">MinIO (S3)</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-blue-200 transition-colors">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/elasticsearch/elasticsearch-original.svg" alt="Elasticsearch" class="w-10 h-10 mx-auto mb-2">
+                        <p class="text-sm font-medium text-gray-700">Elasticsearch</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-blue-200 transition-colors">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js" class="w-10 h-10 mx-auto mb-2">
+                        <p class="text-sm font-medium text-gray-700">Node.js</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-blue-200 transition-colors">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/express/express-original.svg" alt="Express" class="w-10 h-10 mx-auto mb-2">
+                        <p class="text-sm font-medium text-gray-700">Express</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-blue-200 transition-colors">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" class="w-10 h-10 mx-auto mb-2">
+                        <p class="text-sm font-medium text-gray-700">React 18</p>
+                    </div>
+                    <div class="bg-white rounded-xl p-4 text-center border border-gray-100 hover:border-blue-200 transition-colors">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg" alt="Tailwind" class="w-10 h-10 mx-auto mb-2">
+                        <p class="text-sm font-medium text-gray-700">Tailwind CSS</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Links -->
+            <section class="grid md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+                <a href="http://localhost:5173" target="_blank" class="bg-white rounded-xl p-6 border border-gray-100 hover:border-blue-300 hover:shadow-lg transition-all duration-300 text-center">
+                    <svg class="w-10 h-10 mx-auto mb-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    <h4 class="font-semibold text-gray-900 mb-1">FS-01 Frontend</h4>
+                    <p class="text-sm text-gray-500">http://localhost:5173</p>
+                </a>
+                <a href="http://localhost:5174" target="_blank" class="bg-white rounded-xl p-6 border border-gray-100 hover:border-purple-300 hover:shadow-lg transition-all duration-300 text-center">
+                    <svg class="w-10 h-10 mx-auto mb-3 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                    <h4 class="font-semibold text-gray-900 mb-1">FS-03 Frontend</h4>
+                    <p class="text-sm text-gray-500">http://localhost:5174</p>
+                </a>
+                <a href="http://localhost:5000/api/v1/health" target="_blank" class="bg-white rounded-xl p-6 border border-gray-100 hover:border-green-300 hover:shadow-lg transition-all duration-300 text-center">
+                    <svg class="w-10 h-10 mx-auto mb-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <h4 class="font-semibold text-gray-900 mb-1">FS-01 API</h4>
+                    <p class="text-sm text-gray-500">http://localhost:5000</p>
+                </a>
+                <a href="http://localhost:5001/api/v1/health" target="_blank" class="bg-white rounded-xl p-6 border border-gray-100 hover:border-indigo-300 hover:shadow-lg transition-all duration-300 text-center">
+                    <svg class="w-10 h-10 mx-auto mb-3 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <h4 class="font-semibold text-gray-900 mb-1">FS-03 API</h4>
+                    <p class="text-sm text-gray-500">http://localhost:5001</p>
+                </a>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white border-t border-gray-100 py-8 mt-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <p class="text-gray-500 text-sm">
+                    Built with <span class="text-red-500">♥</span> using Docker, Node.js, React, MongoDB, Redis, and more.
+                </p>
+                <p class="text-gray-400 text-xs mt-2">
+                    Full-Stack Projects Hub &copy; 2024
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

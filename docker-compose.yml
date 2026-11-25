@@ -1,0 +1,158 @@
+version: '3.8'
+
+services:
+  homepage:
+    build:
+      context: .
+      dockerfile: Dockerfile.homepage
+    container_name: fs-homepage
+    ports:
+      - "80:80"
+    networks:
+      - fs-network
+    depends_on:
+      - fs01-frontend
+      - fs03-frontend
+
+  fs01-frontend:
+    build:
+      context: ./FS-01-Ecommerce/frontend
+      dockerfile: Dockerfile
+    container_name: fs01-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://fs01-backend:5000/api/v1
+    networks:
+      - fs-network
+    depends_on:
+      - fs01-backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  fs01-backend:
+    build:
+      context: ./FS-01-Ecommerce
+      dockerfile: backend/Dockerfile
+    container_name: fs01-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGODB_URI=mongodb://mongodb:27017/fs01_ecommerce
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-in-production-min-32-chars}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-sk_test_mock}
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY:-pk_test_mock}
+      - MINIO_ENDPOINT=minio
+      - MINIO_PORT=9000
+      - MINIO_USE_SSL=false
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_BUCKET=fs01-ecommerce
+      - CORS_ORIGIN=http://localhost:5173,http://localhost
+    networks:
+      - fs-network
+    depends_on:
+      - mongodb
+      - redis
+
+  fs03-frontend:
+    build:
+      context: ./FS-03-LMS/frontend
+      dockerfile: Dockerfile
+    container_name: fs03-frontend
+    ports:
+      - "5174:5174"
+    environment:
+      - VITE_API_URL=http://fs03-backend:5001/api/v1
+    networks:
+      - fs-network
+    depends_on:
+      - fs03-backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5174/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  fs03-backend:
+    build:
+      context: ./FS-03-LMS
+      dockerfile: backend/Dockerfile
+    container_name: fs03-backend
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - MONGODB_URI=mongodb://mongodb:27017/fs03_lms
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=1
+      - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-in-production-min-32-chars}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-sk_test_mock}
+      - MINIO_ENDPOINT=minio
+      - MINIO_PORT=9000
+      - MINIO_USE_SSL=false
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_BUCKET=fs03-lms
+      - LIVEKIT_URL=ws://livekit:7880
+      - LIVEKIT_API_KEY=devkey
+      - LIVEKIT_API_SECRET=secret
+      - FFMPEG_PATH=ffmpeg
+      - CORS_ORIGIN=http://localhost:5174,http://localhost
+      - FRONTEND_URL=http://localhost
+    networks:
+      - fs-network
+    depends_on:
+      - mongodb
+      - redis
+
+  mongodb:
+    image: mongo:7
+    container_name: fs-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: fs01_ecommerce
+    networks:
+      - fs-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/fs01_ecommerce --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: fs-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - fs-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  fs-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  redis_data:
