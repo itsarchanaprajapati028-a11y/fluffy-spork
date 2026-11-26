@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
+import { useAuth } from '../hooks/useAuth';
 import { formatPrice } from '../utils/helpers';
 
 function TrashIcon({ className }) {
@@ -13,10 +14,11 @@ function TrashIcon({ className }) {
 
 export function Cart() {
   const { items, subtotal, discount, tax, shippingCost, total, totalItems, couponCode, fetchCart, updateCartItem, removeFromCart, clearCart, applyCoupon, removeCoupon } = useCart();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    fetchCart();
-  }, []);
+    if (isAuthenticated) fetchCart();
+  }, [isAuthenticated, fetchCart]);
 
   if (!items || items.length === 0) {
     return (

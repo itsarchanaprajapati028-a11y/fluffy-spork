@@ -69,11 +69,11 @@ export function Home() {
               Fast shipping, secure payments, and 24/7 support.
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button size="lg" asChild className="bg-white text-primary-600 hover:bg-gray-100">
+              <Button size="lg" asChild className="!bg-white !text-primary-600 hover:!bg-gray-100">
                 <Link to="/products">Start Shopping</Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10" asChild>
-                <Link to="/vendor/register">Become a Vendor <ArrowRightIcon className="h-5 w-5 ml-2" /></Link>
+              <Button size="lg" variant="outline" className="!border-white !text-white hover:!bg-white/10" asChild>
+                <Link to="/register">Become a Vendor <ArrowRightIcon className="h-5 w-5 ml-2" /></Link>
               </Button>
             </div>
           </div>
@@ -105,7 +105,7 @@ export function Home() {
               <h2 className="text-3xl font-bold text-gray-900">Shop by Category</h2>
               <p className="text-gray-600 mt-1">Explore our curated collections</p>
             </div>
-            <Link to="/categories" className="text-primary-600 hover:text-primary-700 font-medium">
+            <Link to="/products" className="text-primary-600 hover:text-primary-700 font-medium">
               View All <ArrowRightIcon className="h-4 w-4 inline ml-1" />
             </Link>
           </div>
@@ -118,6 +118,7 @@ export function Home() {
                   alt={category.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
+                  onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = '/placeholder-product.svg'; }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
@@ -174,8 +175,8 @@ export function Home() {
             Join thousands of vendors growing their business on FS-01. 
             Easy setup, low fees, and access to millions of customers.
           </p>
-          <Button size="lg" variant="secondary" asChild className="bg-white text-primary-600 hover:bg-gray-100">
-            <Link to="/vendor/register">Become a Vendor</Link>
+          <Button size="lg" variant="secondary" asChild className="!bg-white !text-primary-600 hover:!bg-gray-100">
+            <Link to="/register">Become a Vendor</Link>
           </Button>
         </div>
       </section>

@@ -2,8 +2,10 @@ import axios from 'axios';
 import { store } from '../store';
 import { logout } from '../slices/authSlice';
 
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '/api/v1').replace(/\/+$/, '');
+
 const api = axios.create({
-  baseURL: '/api/v1',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -35,7 +37,7 @@ api.interceptors.response.use(
         const refreshToken = state.auth.refreshToken;
         
         if (refreshToken) {
-          const response = await axios.post('/api/v1/auth/refresh-token', { refreshToken });
+          const response = await axios.post(`${API_BASE_URL}/auth/refresh-token`, { refreshToken });
           const { accessToken, refreshToken: newRefreshToken } = response.data;
           
           store.dispatch({ type: 'auth/setCredentials', payload: { accessToken, refreshToken: newRefreshToken, user: state.auth.user } });

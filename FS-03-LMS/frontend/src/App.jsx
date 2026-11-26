@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { useUI } from './hooks/useUI';
@@ -39,12 +39,16 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   const { isAuthenticated, user, isLoading } = useAuth();
   const { closeAllModals } = useUI();
   
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) closeAllModals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, isAuthenticated]);
+  
   if (isLoading) {
     return <LoadingSpinner size="lg" />;
   }
   
   if (!isAuthenticated) {
-    closeAllModals();
     return <Navigate to="/login" state={{ from: window.location.pathname }} replace />;
   }
   
@@ -77,7 +81,12 @@ const PageWrapper = ({ children }) => (
 );
 
 function App() {
-  const { fetchProfile } = useAuth();
+  const { fetchProfile, accessToken } = useAuth();
+  
+  useEffect(() => {
+    if (accessToken) fetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   
   return (
     <Layout>

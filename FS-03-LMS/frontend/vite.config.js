@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   esbuild: {
     loader: 'tsx',
-    include: /\.(jsx?|tsx?)$/,
+    include: /src\/.*\.[jt]sx?$/,
   },
   resolve: {
     alias: {

@@ -28,6 +28,15 @@ export const fetchProductBySlug = createAsyncThunk('product/fetchProductBySlug',
   }
 });
 
+export const fetchRelatedProducts = createAsyncThunk('product/fetchRelatedProducts', async ({ id, limit = 4 }, { rejectWithValue }) => {
+  try {
+    const response = await api.get(`/products/${id}/related`, { params: { limit } });
+    return response.data.products;
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || 'Failed to fetch related products');
+  }
+});
+
 export const fetchFeaturedProducts = createAsyncThunk('product/fetchFeaturedProducts', async (limit = 10, { rejectWithValue }) => {
   try {
     const response = await api.get('/products/featured', { params: { limit } });
@@ -100,6 +109,7 @@ const productSlice = createSlice({
   initialState: {
     products: [],
     currentProduct: null,
+    relatedProducts: [],
     featuredProducts: [],
     categories: [],
     brands: [],
@@ -159,6 +169,7 @@ const productSlice = createSlice({
     },
     clearCurrentProduct: (state) => {
       state.currentProduct = null;
+      state.relatedProducts = [];
     },
     clearError: (state) => {
       state.error = null;
@@ -196,8 +207,23 @@ const productSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload;
       })
+      .addCase(fetchProductBySlug.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(fetchProductBySlug.fulfilled, (state, action) => {
+        state.isLoading = false;
         state.currentProduct = action.payload;
+        state.relatedProducts = [];
+      })
+      .addCase(fetchProductBySlug.rejected, (state, action) => {
+        state.isLoading = false;
+        state.currentProduct = null;
+        state.relatedProducts = [];
+        state.error = action.payload;
+      })
+      .addCase(fetchRelatedProducts.fulfilled, (state, action) => {
+        state.relatedProducts = action.payload;
       })
       .addCase(fetchFeaturedProducts.fulfilled, (state, action) => {
         state.featuredProducts = action.payload;

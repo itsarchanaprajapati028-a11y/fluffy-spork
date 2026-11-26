@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { login, register, logout, fetchProfile, updateProfile, refreshToken, clearError } from '../slices/authSlice';
+import { login, register, logout, fetchProfile, updateProfile, refreshToken, forgotPassword, resetPassword, clearError } from '../slices/authSlice';
 import { setCredentials } from '../slices/authSlice';
 
 export const useAuth = () => {
@@ -9,10 +9,14 @@ export const useAuth = () => {
   const location = useLocation();
   const { user, accessToken, isAuthenticated, isLoading, error } = useSelector(state => state.auth);
   
-  const handleLogin = async (credentials) => {
+  const handleLogin = async (emailOrCredentials, password) => {
+    const credentials = typeof emailOrCredentials === 'string'
+      ? { email: emailOrCredentials, password }
+      : emailOrCredentials;
     const result = await dispatch(login(credentials));
     if (login.fulfilled.match(result)) {
-      navigate(location.state?.from?.pathname || '/');
+      const from = location.state?.from?.pathname || location.state?.from || '/';
+      navigate(from, { replace: true });
       return { success: true };
     }
     return { success: false, error: result.payload };
@@ -21,7 +25,8 @@ export const useAuth = () => {
   const handleRegister = async (userData) => {
     const result = await dispatch(register(userData));
     if (register.fulfilled.match(result)) {
-      navigate(location.state?.from?.pathname || '/');
+      const from = location.state?.from?.pathname || location.state?.from || '/';
+      navigate(from, { replace: true });
       return { success: true };
     }
     return { success: false, error: result.payload };
@@ -54,6 +59,20 @@ export const useAuth = () => {
     dispatch(setCredentials(credentials));
   };
   
+  const handleForgotPassword = async (email) => {
+    const result = await dispatch(forgotPassword(email));
+    return forgotPassword.fulfilled.match(result)
+      ? { success: true, message: result.payload?.message }
+      : { success: false, error: result.payload };
+  };
+  
+  const handleResetPassword = async (token, password) => {
+    const result = await dispatch(resetPassword({ token, password }));
+    return resetPassword.fulfilled.match(result)
+      ? { success: true, message: result.payload?.message }
+      : { success: false, error: result.payload };
+  };
+  
   const handleClearError = () => {
     dispatch(clearError());
   };
@@ -71,6 +90,8 @@ export const useAuth = () => {
     updateProfile: handleUpdateProfile,
     refreshToken: handleRefreshToken,
     setCredentials: handleSetCredentials,
+    forgotPassword: handleForgotPassword,
+    resetPassword: handleResetPassword,
     clearError: handleClearError,
   };
 };

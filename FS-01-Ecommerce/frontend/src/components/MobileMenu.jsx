@@ -3,12 +3,13 @@ import { useAuth } from '../hooks/useAuth';
 import { useUI } from '../hooks/useUI';
 import { XMarkIcon, Bars3Icon, UserCircleIcon, ShoppingCartIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { createPortal } from 'react-dom';
+import { useCart } from '../hooks/useCart';
 
 const MobileMenuContent = () => {
   const location = useLocation();
   const { isAuthenticated, user, logout } = useAuth();
   const { mobileMenuOpen, setMobileMenuOpen, toggleSearchModal, setCartDrawerOpen, toggleUserMenu, userMenuOpen } = useUI();
-  const { totalItems } = require('../hooks/useCart').useCart();
+  const { totalItems } = useCart();
   
   if (!mobileMenuOpen) return null;
   
@@ -20,7 +21,7 @@ const MobileMenuContent = () => {
   const navigation = [
     { name: 'Home', href: '/', current: location.pathname === '/' },
     { name: 'Products', href: '/products', current: location.pathname.startsWith('/products') },
-    { name: 'Categories', href: '/categories', current: location.pathname === '/categories' },
+    { name: 'Categories', href: '/products', current: false },
     { name: 'Featured', href: '/products?isFeatured=true', current: false },
   ];
   

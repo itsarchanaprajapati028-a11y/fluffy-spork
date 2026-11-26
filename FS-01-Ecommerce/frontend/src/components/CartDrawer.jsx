@@ -6,20 +6,20 @@ import { XMarkIcon, PlusIcon, MinusIcon, TrashIcon, ArrowRightIcon } from '@hero
 import { createPortal } from 'react-dom';
 
 const CartDrawerContent = () => {
-  const { items, subtotal, discount, tax, shippingCost, total, totalItems, couponCode, isLoading } = useCart();
+  const { items, subtotal, discount, tax, shippingCost, total, totalItems, couponCode, isLoading, updateCartItem, removeFromCart, clearCart } = useCart();
   const { cartDrawerOpen, setCartDrawerOpen } = useUI();
   const location = useLocation();
   
   const handleUpdateQuantity = async (productId: string, quantity: number, variant: any = null) => {
-    await useCart.getState().updateCartItem(productId, quantity, variant);
+    await updateCartItem(productId, quantity, variant);
   };
   
   const handleRemoveItem = async (productId: string, variant: any = null) => {
-    await useCart.getState().removeFromCart(productId, variant);
+    await removeFromCart(productId, variant);
   };
   
   const handleClearCart = async () => {
-    await useCart.getState().clearCart();
+    await clearCart();
   };
   
   const handleApplyCoupon = async () => {

@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { createOrder, fetchOrders, fetchOrder, fetchVendorOrders, createPaymentIntent, confirmPayment, updateOrderStatus, cancelOrder } from '../slices/orderSlice';
+import { createOrder, fetchOrders, fetchOrder, fetchVendorOrders, createPaymentIntent, confirmPayment, fetchRazorpayConfig, createRazorpayOrder, verifyRazorpayPayment, updateOrderStatus, cancelOrder } from '../slices/orderSlice';
 
 export const useOrders = () => {
   const dispatch = useDispatch();
-  const { orders, currentOrder, vendorOrders, pagination, vendorPagination, paymentIntent, isLoading, isCreating, isProcessing, error } = useSelector(state => state.order);
+  const { orders, currentOrder, vendorOrders, pagination, vendorPagination, paymentIntent, razorpayConfig, razorpayOrder, isLoading, isCreating, isProcessing, isPaying, error } = useSelector(state => state.order);
   
   const handleCreateOrder = async (orderData) => {
     const result = await dispatch(createOrder(orderData));
@@ -35,6 +35,21 @@ export const useOrders = () => {
     return confirmPayment.fulfilled.match(result) ? { success: true, order: result.payload } : { success: false, error: result.payload };
   };
   
+  const handleFetchRazorpayConfig = async () => {
+    const result = await dispatch(fetchRazorpayConfig());
+    return fetchRazorpayConfig.fulfilled.match(result) ? result.payload : null;
+  };
+  
+  const handleCreateRazorpayOrder = async (orderId) => {
+    const result = await dispatch(createRazorpayOrder({ orderId }));
+    return createRazorpayOrder.fulfilled.match(result) ? result.payload : { error: result.payload };
+  };
+  
+  const handleVerifyRazorpayPayment = async (payload) => {
+    const result = await dispatch(verifyRazorpayPayment(payload));
+    return verifyRazorpayPayment.fulfilled.match(result) ? { success: true, data: result.payload } : { success: false, error: result.payload };
+  };
+  
   const handleUpdateOrderStatus = async (orderId, status, trackingData = {}) => {
     const result = await dispatch(updateOrderStatus({ orderId, status, trackingData }));
     return updateOrderStatus.fulfilled.match(result) ? { success: true, order: result.payload } : { success: false, error: result.payload };
@@ -52,9 +67,12 @@ export const useOrders = () => {
     pagination,
     vendorPagination,
     paymentIntent,
+    razorpayConfig,
+    razorpayOrder,
     isLoading,
     isCreating,
     isProcessing,
+    isPaying,
     error,
     createOrder: handleCreateOrder,
     fetchOrders: handleFetchOrders,
@@ -62,6 +80,9 @@ export const useOrders = () => {
     fetchVendorOrders: handleFetchVendorOrders,
     createPaymentIntent: handleCreatePaymentIntent,
     confirmPayment: handleConfirmPayment,
+    fetchRazorpayConfig: handleFetchRazorpayConfig,
+    createRazorpayOrder: handleCreateRazorpayOrder,
+    verifyRazorpayPayment: handleVerifyRazorpayPayment,
     updateOrderStatus: handleUpdateOrderStatus,
     cancelOrder: handleCancelOrder,
   };

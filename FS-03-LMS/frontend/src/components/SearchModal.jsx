@@ -44,7 +44,7 @@ const SearchModalContent = () => {
       setIsLoading(true);
       try {
         const result = await fetchCourses({ search: searchQuery, limit: 5 });
-        setSuggestions(result.courses || []);
+        setSuggestions(Array.isArray(result) ? result : (result?.courses || []));
       } catch (error) {
         setSuggestions([]);
       } finally {

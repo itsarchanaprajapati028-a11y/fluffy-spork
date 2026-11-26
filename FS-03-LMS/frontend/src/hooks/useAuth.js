@@ -1,55 +1,75 @@
-import { useState, useEffect, useCallback } from 'react';
-import api from '../utils/api';
+import { useSelector, useDispatch } from 'react-redux';
+import { login, register, logout, fetchProfile, updateProfile, forgotPassword, resetPassword, clearError } from '../slices/authSlice';
 
 export function useAuth() {
-  const [user, setUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { user, accessToken, isAuthenticated, isLoading, error } = useSelector((state) => state.auth);
 
-  const fetchProfile = useCallback(async () => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) { setIsLoading(false); return; }
-    try {
-      const r = await api.get('/auth/me');
-      setUser(r.data.data);
-    } catch (e) {
-      setUser(null);
-    } finally {
-      setIsLoading(false);
+  const handleLogin = async (emailOrCredentials, password) => {
+    const credentials = typeof emailOrCredentials === 'string'
+      ? { email: emailOrCredentials, password }
+      : emailOrCredentials;
+    const result = await dispatch(login(credentials));
+    if (login.fulfilled.match(result)) {
+      return { success: true, user: result.payload.user };
     }
-  }, []);
+    return { success: false, error: result.payload };
+  };
 
-  useEffect(() => { fetchProfile(); }, [fetchProfile]);
+  const handleRegister = async (userData) => {
+    const result = await dispatch(register(userData));
+    if (register.fulfilled.match(result)) {
+      return { success: true, user: result.payload.user };
+    }
+    return { success: false, error: result.payload };
+  };
 
-  const login = async (email, password) => {
-    const r = await api.post('/auth/login', { email, password });
-    localStorage.setItem('accessToken', r.data.accessToken);
-    localStorage.setItem('refreshToken', r.data.refreshToken);
-    setUser(r.data.user);
+  const handleLogout = async () => {
+    dispatch(logout());
     return { success: true };
   };
 
-  const register = async (data) => {
-    const r = await api.post('/auth/register', data);
-    localStorage.setItem('accessToken', r.data.accessToken);
-    localStorage.setItem('refreshToken', r.data.refreshToken);
-    setUser(r.data.user);
-    return { success: true };
+  const handleFetchProfile = async () => {
+    const result = await dispatch(fetchProfile());
+    return fetchProfile.fulfilled.match(result);
   };
 
-  const logout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    setUser(null);
+  const handleUpdateProfile = async (data) => {
+    const result = await dispatch(updateProfile(data));
+    if (updateProfile.fulfilled.match(result)) {
+      return { success: true, user: result.payload };
+    }
+    return { success: false, error: result.payload };
+  };
+
+  const handleForgotPassword = async (email) => {
+    const result = await dispatch(forgotPassword(email));
+    return forgotPassword.fulfilled.match(result)
+      ? { success: true, message: result.payload?.message }
+      : { success: false, error: result.payload };
+  };
+
+  const handleResetPassword = async (token, password) => {
+    const result = await dispatch(resetPassword({ token, password }));
+    return resetPassword.fulfilled.match(result)
+      ? { success: true, message: result.payload?.message }
+      : { success: false, error: result.payload };
   };
 
   return {
     user,
-    isAuthenticated: !!user,
+    accessToken,
+    isAuthenticated,
     isLoading,
-    fetchProfile,
-    login,
-    register,
-    logout,
+    error,
+    login: handleLogin,
+    register: handleRegister,
+    logout: handleLogout,
+    fetchProfile: handleFetchProfile,
+    updateProfile: handleUpdateProfile,
+    forgotPassword: handleForgotPassword,
+    resetPassword: handleResetPassword,
+    clearError: () => dispatch(clearError()),
   };
 }
 

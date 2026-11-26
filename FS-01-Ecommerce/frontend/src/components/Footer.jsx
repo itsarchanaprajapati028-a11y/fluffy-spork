@@ -23,7 +23,7 @@ export default function Footer() {
       { label: 'Accessibility', href: '/accessibility' },
     ],
     resources: [
-      { label: 'Sell with Us', href: '/vendor/register' },
+      { label: 'Sell with Us', href: '/register' },
       { label: 'Affiliate Program', href: '/affiliate' },
       { label: 'Gift Cards', href: '/gift-cards' },
       { label: 'Mobile App', href: '/app' },

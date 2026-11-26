@@ -1,6 +1,27 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import api from '../utils/api';
 
+const readStoredUser = () => {
+  try {
+    const raw = localStorage.getItem('user');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+const persistAuth = ({ user, accessToken, refreshToken }) => {
+  if (accessToken) localStorage.setItem('accessToken', accessToken);
+  if (refreshToken) localStorage.setItem('refreshToken', refreshToken);
+  if (user) localStorage.setItem('user', JSON.stringify(user));
+};
+
+const clearStoredAuth = () => {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
+  localStorage.removeItem('user');
+};
+
 export const login = createAsyncThunk('auth/login', async (credentials, { rejectWithValue }) => {
   try {
     const response = await api.post('/auth/login', credentials);
@@ -46,13 +67,31 @@ export const updateProfile = createAsyncThunk('auth/updateProfile', async (data,
   }
 });
 
+export const forgotPassword = createAsyncThunk('auth/forgotPassword', async (email, { rejectWithValue }) => {
+  try {
+    const response = await api.post('/auth/forgot-password', { email });
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || 'Failed to send reset email');
+  }
+});
+
+export const resetPassword = createAsyncThunk('auth/resetPassword', async ({ token, password }, { rejectWithValue }) => {
+  try {
+    const response = await api.post('/auth/reset-password', { token, password });
+    return response.data;
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || 'Failed to reset password');
+  }
+});
+
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: null,
-    accessToken: null,
-    refreshToken: null,
-    isAuthenticated: false,
+    user: readStoredUser(),
+    accessToken: localStorage.getItem('accessToken'),
+    refreshToken: localStorage.getItem('refreshToken'),
+    isAuthenticated: Boolean(localStorage.getItem('accessToken')),
     isLoading: false,
     error: null,
   },
@@ -61,13 +100,15 @@ const authSlice = createSlice({
       state.user = action.payload.user;
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
-      state.isAuthenticated = true;
+      state.isAuthenticated = Boolean(action.payload.accessToken);
+      persistAuth(action.payload);
     },
     logout: (state) => {
       state.user = null;
       state.accessToken = null;
       state.refreshToken = null;
       state.isAuthenticated = false;
+      clearStoredAuth();
     },
     clearError: (state) => {
       state.error = null;
@@ -85,6 +126,7 @@ const authSlice = createSlice({
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
         state.isAuthenticated = true;
+        persistAuth(action.payload);
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -100,6 +142,7 @@ const authSlice = createSlice({
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
         state.isAuthenticated = true;
+        persistAuth(action.payload);
       })
       .addCase(register.rejected, (state, action) => {
         state.isLoading = false;
@@ -108,18 +151,35 @@ const authSlice = createSlice({
       .addCase(refreshToken.fulfilled, (state, action) => {
         state.accessToken = action.payload.accessToken;
         state.refreshToken = action.payload.refreshToken;
+        persistAuth({
+          user: state.user,
+          accessToken: action.payload.accessToken,
+          refreshToken: action.payload.refreshToken,
+        });
       })
       .addCase(refreshToken.rejected, (state) => {
         state.user = null;
         state.accessToken = null;
         state.refreshToken = null;
         state.isAuthenticated = false;
+        clearStoredAuth();
       })
       .addCase(fetchProfile.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.isAuthenticated = true;
+        persistAuth({ user: action.payload, accessToken: state.accessToken, refreshToken: state.refreshToken });
+      })
+      .addCase(fetchProfile.rejected, (state, action) => {
+        state.user = null;
+        state.accessToken = null;
+        state.refreshToken = null;
+        state.isAuthenticated = false;
+        state.error = action.payload;
+        clearStoredAuth();
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.user = action.payload;
+        persistAuth({ user: action.payload, accessToken: state.accessToken, refreshToken: state.refreshToken });
       });
   },
 });

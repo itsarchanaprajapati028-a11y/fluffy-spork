@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Fragment, useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import { useAuth } from '../hooks/useAuth';
 import { useOrders } from '../hooks/useOrders';
@@ -11,6 +11,7 @@ import { CreditCardIcon, ShieldCheckIcon, TruckIcon, CheckCircleIcon, ArrowRight
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const paymentMethods = [
+  { id: 'razorpay', name: 'Razorpay (Demo)', icon: CreditCardIcon, description: 'UPI, cards, netbanking — test mode' },
   { id: 'stripe', name: 'Credit/Debit Card', icon: CreditCardIcon, description: 'Visa, Mastercard, Amex' },
   { id: 'paypal', name: 'PayPal', icon: ShieldCheckIcon, description: 'Pay with your PayPal account' },
   { id: 'cod', name: 'Cash on Delivery', icon: TruckIcon, description: 'Pay when you receive your order' },
@@ -33,13 +34,14 @@ export function Checkout() {
     total, 
     shippingAddress,
     couponCode,
+    isLoading,
     fetchCart,
   } = useCart();
   const { isAuthenticated, user } = useAuth();
   const { createOrder } = useOrders();
   
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedPayment, setSelectedPayment] = useState('stripe');
+  const [selectedPayment, setSelectedPayment] = useState('razorpay');
   const [formData, setFormData] = useState({
     firstName: shippingAddress?.firstName || user?.firstName || '',
     lastName: shippingAddress?.lastName || user?.lastName || '',
@@ -61,32 +63,37 @@ export function Checkout() {
   const [orderCreated, setOrderCreated] = useState(false);
   const [orderId, setOrderId] = useState('');
   
+  useEffect(() => {
+    if (isAuthenticated) fetchCart();
+  }, [isAuthenticated, fetchCart]);
+  
   const validateStep = (step) => {
-    setErrors({});
+    const nextErrors = {};
     
     if (step === 1) {
-      if (!formData.firstName.trim()) setErrors({ firstName: 'First name is required' });
-      if (!formData.lastName.trim()) setErrors({ lastName: 'Last name is required' });
-      if (!formData.email.trim()) setErrors({ email: 'Email is required' });
-      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) setErrors({ email: 'Invalid email format' });
-      if (!formData.street.trim()) setErrors({ street: 'Street address is required' });
-      if (!formData.city.trim()) setErrors({ city: 'City is required' });
-      if (!formData.state.trim()) setErrors({ state: 'State is required' });
-      if (!formData.postalCode.trim()) setErrors({ postalCode: 'Postal code is required' });
-      if (!formData.country.trim()) setErrors({ country: 'Country is required' });
+      if (!formData.firstName.trim()) nextErrors.firstName = 'First name is required';
+      if (!formData.lastName.trim()) nextErrors.lastName = 'Last name is required';
+      if (!formData.email.trim()) nextErrors.email = 'Email is required';
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) nextErrors.email = 'Invalid email format';
+      if (!formData.street.trim()) nextErrors.street = 'Street address is required';
+      if (!formData.city.trim()) nextErrors.city = 'City is required';
+      if (!formData.state.trim()) nextErrors.state = 'State is required';
+      if (!formData.postalCode.trim()) nextErrors.postalCode = 'Postal code is required';
+      if (!formData.country.trim()) nextErrors.country = 'Country is required';
     }
     
     if (step === 2 && selectedPayment === 'stripe') {
-      if (!formData.cardName.trim()) setErrors({ cardName: 'Name on card is required' });
-      if (!formData.cardNumber.trim()) setErrors({ cardNumber: 'Card number is required' });
-      else if (formData.cardNumber.replace(/\s/g, '').length < 15) setErrors({ cardNumber: 'Invalid card number' });
-      if (!formData.cardExpiry.trim()) setErrors({ cardExpiry: 'Expiry date is required' });
-      else if (!/^\d{2}\/\d{2}$/.test(formData.cardExpiry)) setErrors({ cardExpiry: 'Invalid expiry format (MM/YY)' });
-      if (!formData.cardCvc.trim()) setErrors({ cardCvc: 'CVC is required' });
-      else if (formData.cardCvc.length < 3) setErrors({ cardCvc: 'Invalid CVC' });
+      if (!formData.cardName.trim()) nextErrors.cardName = 'Name on card is required';
+      if (!formData.cardNumber.trim()) nextErrors.cardNumber = 'Card number is required';
+      else if (formData.cardNumber.replace(/\s/g, '').length < 15) nextErrors.cardNumber = 'Invalid card number';
+      if (!formData.cardExpiry.trim()) nextErrors.cardExpiry = 'Expiry date is required';
+      else if (!/^\d{2}\/\d{2}$/.test(formData.cardExpiry)) nextErrors.cardExpiry = 'Invalid expiry format (MM/YY)';
+      if (!formData.cardCvc.trim()) nextErrors.cardCvc = 'CVC is required';
+      else if (formData.cardCvc.length < 3) nextErrors.cardCvc = 'Invalid CVC';
     }
     
-    return Object.keys(errors).length === 0;
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
   };
   
   const handleNext = () => {
@@ -130,6 +137,10 @@ export function Checkout() {
       
       const result = await createOrder(orderData);
       if (result.success) {
+        if (selectedPayment === 'razorpay') {
+          navigate('/payments?orderId=' + result.order._id);
+          return;
+        }
         setOrderCreated(true);
         setOrderId(result.order._id);
       } else {
@@ -143,11 +154,15 @@ export function Checkout() {
   };
   
   if (!isAuthenticated) {
-    return navigate('/login');
+    return <Navigate to="/login" replace />;
+  }
+  
+  if (isLoading) {
+    return <div className="min-h-screen flex items-center justify-center"><LoadingSpinner size="lg" /></div>;
   }
   
   if (items.length === 0) {
-    return navigate('/cart');
+    return <Navigate to="/cart" replace />;
   }
   
   if (orderCreated) {
@@ -180,7 +195,7 @@ export function Checkout() {
         <div className="mb-8">
           <div className="flex items-center justify-center">
             {steps.map((step, index) => (
-              <React.Fragment key={step.id}>
+              <Fragment key={step.id}>
                 <div className={`flex items-center ${index < steps.length - 1 ? 'relative' : ''}`}>
                   <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-colors ${
                     currentStep >= step.id ? 'bg-primary-600 border-primary-600 text-white' : 'bg-white border-gray-300 text-gray-400'
@@ -197,7 +212,7 @@ export function Checkout() {
                     <div className="absolute left-1/2 top-5 w-full h-0.5 bg-gray-200 z-0" />
                   )}
                 </div>
-              </React.Fragment>
+              </Fragment>
             ))}
           </div>
         </div>
@@ -338,6 +353,14 @@ export function Checkout() {
                       </div>
                     </div>
                     
+                    {selectedPayment === 'razorpay' && (
+                      <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl text-sm text-yellow-900">
+                        You will be redirected to the Razorpay demo checkout after placing the order. Use test UPI
+                        <code className="mx-1 bg-white/70 px-1 rounded">success@razorpay</code> or test card
+                        <code className="mx-1 bg-white/70 px-1 rounded">4111 1111 1111 1111</code>. No real money is charged.
+                      </div>
+                    )}
+
                     {selectedPayment === 'stripe' && (
                       <div className="border-t border-gray-100 pt-6 space-y-4">
                         <h3 className="font-medium text-gray-900">Card Details</h3>
@@ -399,7 +422,7 @@ export function Checkout() {
                     
                     <div>
                       <h3 className="font-medium text-gray-900 mb-4">Payment Method</h3>
-                      <p className="text-gray-600 capitalize">{selectedPayment === 'stripe' ? 'Credit/Debit Card' : selectedPayment === 'paypal' ? 'PayPal' : 'Cash on Delivery'}</p>
+                      <p className="text-gray-600 capitalize">{selectedPayment === 'razorpay' ? 'Razorpay (Demo)' : selectedPayment === 'stripe' ? 'Credit/Debit Card' : selectedPayment === 'paypal' ? 'PayPal' : 'Cash on Delivery'}</p>
                     </div>
                     
                     <div className="border-t border-gray-100 pt-4">

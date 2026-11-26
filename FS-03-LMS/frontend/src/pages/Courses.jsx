@@ -40,16 +40,20 @@ export function Courses() {
   
   useEffect(() => {
     fetchCategories();
+    fetchBrands();
     const initialCategory = searchParams.get('category') || '';
     const initialSearch = searchParams.get('search') || '';
     const initialSort = searchParams.get('sortBy') || 'createdAt';
     const initialOrder = searchParams.get('sortOrder') || 'desc';
     const initialBrands = searchParams.get('brand')?.split(',').filter(Boolean) || [];
+    const initialMin = searchParams.get('minPrice') || '';
+    const initialMax = searchParams.get('maxPrice') || '';
     
     setSelectedCategory(initialCategory);
     setSortBy(initialSort);
     setSortOrder(initialOrder);
     setSelectedBrands(initialBrands);
+    setPriceRange({ min: initialMin, max: initialMax });
     
     setFilters({
       category: initialCategory,
@@ -57,6 +61,8 @@ export function Courses() {
       sortBy: initialSort,
       sortOrder: initialOrder,
       brand: initialBrands.length > 0 ? initialBrands : undefined,
+      minPrice: initialMin || undefined,
+      maxPrice: initialMax || undefined,
     });
     
     fetchProducts({
@@ -65,15 +71,27 @@ export function Courses() {
       sortBy: initialSort,
       sortOrder: initialOrder,
       brand: initialBrands.length > 0 ? initialBrands : undefined,
+      minPrice: initialMin || undefined,
+      maxPrice: initialMax || undefined,
       page: 1,
       limit: 20,
     });
-  }, [fetchCategories, fetchProducts, searchParams, setFilters]);
+  }, [fetchCategories, fetchBrands, fetchProducts, searchParams, setFilters]);
   
-  const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
+  const handleFilterChange = (newFilters = {}) => {
+    const mergedFilters = {
+      category: selectedCategory || undefined,
+      search: searchParams.get('search') || undefined,
+      sortBy,
+      sortOrder,
+      brand: selectedBrands.length > 0 ? selectedBrands : undefined,
+      minPrice: priceRange.min || undefined,
+      maxPrice: priceRange.max || undefined,
+      ...newFilters,
+    };
+    setFilters(mergedFilters);
     const params = new URLSearchParams();
-    Object.entries(newFilters).forEach(([key, value]) => {
+    Object.entries(mergedFilters).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== '' && !(Array.isArray(value) && value.length === 0)) {
         if (Array.isArray(value)) {
           params.set(key, value.join(','));
@@ -122,7 +140,17 @@ export function Courses() {
     setSortOrder('desc');
     clearFilters();
     setSearchParams({});
-    fetchProducts({ page: 1, limit: 20 });
+    fetchProducts({
+      category: undefined,
+      search: undefined,
+      brand: undefined,
+      minPrice: undefined,
+      maxPrice: undefined,
+      sortBy: 'createdAt',
+      sortOrder: 'desc',
+      page: 1,
+      limit: 20,
+    });
   };
   
   const hasActiveFilters = selectedCategory || priceRange.min || priceRange.max || selectedBrands.length > 0;
@@ -147,12 +175,12 @@ export function Courses() {
         </div>
       </div>
       
-      <div className="flex">
-        <aside className={`fixed inset-y-0 left-0 w-72 bg-white border-r border-gray-100 transform transition-transform duration-300 z-40 lg:relative lg:translate-x-0 ${showFilters ? 'translate-x-0' : '-translate-x-full'}`}>
-          {showFilters && (
-            <div className="fixed inset-0 bg-black/50 lg:hidden" onClick={() => setShowFilters(false)} />
-          )}
-          <div className="p-4 lg:p-6 overflow-y-auto h-full">
+      <div className="flex items-start">
+        {showFilters && (
+          <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setShowFilters(false)} />
+        )}
+        <aside className={`fixed inset-y-0 left-0 w-72 bg-white border-r border-gray-100 transform transition-transform duration-300 z-50 lg:top-16 lg:translate-x-0 lg:z-30 ${showFilters ? 'translate-x-0' : '-translate-x-full'}`}>
+          <div className="p-4 lg:p-6 overflow-y-auto h-full overscroll-contain">
             <div className="flex items-center justify-between mb-6 lg:hidden">
               <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
               <button onClick={() => setShowFilters(false)} className="p-2 text-gray-400 hover:text-gray-600">
@@ -163,7 +191,7 @@ export function Courses() {
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Categories</label>
-                <div className="space-y-2 max-h-48 overflow-y-auto">
+                <div className="space-y-2">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
@@ -225,7 +253,7 @@ export function Courses() {
               {brands.length > 0 && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Instructors</label>
-                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                  <div className="space-y-2">
                     {brands.slice(0, 20).map((brand) => (
                       <label key={brand} className="flex items-center gap-2 cursor-pointer">
                         <input
@@ -256,7 +284,7 @@ export function Courses() {
           </div>
         </aside>
         
-        <main className="flex-1 lg:ml-0 min-w-0">
+        <main className="flex-1 lg:ml-72 min-w-0">
           <div className="bg-white border-b border-gray-100 px-4 py-4 lg:px-6 lg:py-5">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
               <div>

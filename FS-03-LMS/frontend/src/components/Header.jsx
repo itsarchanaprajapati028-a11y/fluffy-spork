@@ -24,9 +24,9 @@ export default function Header() {
   const navigation = [
     { name: 'Home', href: '/', current: location.pathname === '/' },
     { name: 'Courses', href: '/courses', current: location.pathname.startsWith('/courses') },
-    { name: 'Live Classes', href: '/live-classes', current: location.pathname.startsWith('/live-classes') },
-    { name: 'Instructors', href: '/instructors', current: location.pathname.startsWith('/instructors') },
-    { name: 'Pricing', href: '/pricing', current: false },
+    { name: 'Featured', href: '/courses?isFeatured=true', current: false },
+    { name: 'My Courses', href: '/my-courses', current: location.pathname.startsWith('/my-courses') },
+    { name: 'Certificates', href: '/my-certificates', current: location.pathname.startsWith('/my-certificates') },
   ];
   
   return (

@@ -27,7 +27,7 @@ export default function Header() {
   const navigation = [
     { name: 'Home', href: '/', current: location.pathname === '/' },
     { name: 'Products', href: '/products', current: location.pathname.startsWith('/products') },
-    { name: 'Categories', href: '/categories', current: location.pathname === '/categories' },
+    { name: 'Categories', href: '/products', current: false },
     { name: 'Featured', href: '/products?isFeatured=true', current: false },
   ];
   
@@ -123,6 +123,13 @@ export default function Header() {
                       onClick={toggleUserMenu}
                     >
                       My Orders
+                    </Link>
+                    <Link
+                      to="/payments"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      onClick={toggleUserMenu}
+                    >
+                      Payments
                     </Link>
                     {user?.role === 'vendor' && (
                       <Link

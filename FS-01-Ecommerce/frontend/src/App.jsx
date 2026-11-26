@@ -1,4 +1,4 @@
-import { Suspense, lazy } from 'react';
+import { Suspense, lazy, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import { useUI } from './hooks/useUI';
@@ -16,6 +16,7 @@ const Profile = lazy(() => import('./pages/profile/Profile').then(module => ({ d
 const Orders = lazy(() => import('./pages/profile/Orders').then(module => ({ default: module.Orders })));
 const OrderDetail = lazy(() => import('./pages/profile/OrderDetail').then(module => ({ default: module.OrderDetail })));
 const Cart = lazy(() => import('./pages/Cart').then(module => ({ default: module.Cart })));
+const Payments = lazy(() => import('./pages/Payments').then(module => ({ default: module.Payments })));
 const Checkout = lazy(() => import('./pages/Checkout').then(module => ({ default: module.Checkout })));
 const VendorDashboard = lazy(() => import('./pages/vendor/Dashboard').then(module => ({ default: module.Dashboard })));
 const VendorProducts = lazy(() => import('./pages/vendor/Products').then(module => ({ default: module.Products })));
@@ -36,12 +37,16 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   const { isAuthenticated, user, isLoading } = useAuth();
   const { closeAllModals } = useUI();
   
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) closeAllModals();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, isAuthenticated]);
+  
   if (isLoading) {
     return <LoadingSpinner size="lg" />;
   }
   
   if (!isAuthenticated) {
-    closeAllModals();
     return <Navigate to="/login" state={{ from: window.location.pathname }} replace />;
   }
   
@@ -74,8 +79,6 @@ const PageWrapper = ({ children }) => (
 );
 
 function App() {
-  const { fetchProfile } = useAuth();
-  
   return (
     <Layout>
       <Routes>
@@ -119,6 +122,14 @@ function App() {
         <Route 
           path="/cart" 
           element={<PageWrapper><Cart /></PageWrapper>} 
+        />
+        <Route 
+          path="/payments" 
+          element={
+            <ProtectedRoute>
+              <PageWrapper><Payments /></PageWrapper>
+            </ProtectedRoute>
+          } 
         />
         <Route 
           path="/checkout" 

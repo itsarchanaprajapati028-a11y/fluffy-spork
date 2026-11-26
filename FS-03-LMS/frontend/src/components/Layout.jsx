@@ -9,7 +9,7 @@ import NotificationContainer from './NotificationContainer';
 import ToastContainer from './ToastContainer';
 import ModalManager from './ModalManager';
 
-export default function Layout() {
+export default function Layout({ children }) {
   const location = useLocation();
   const { isAuthenticated, fetchProfile } = useAuth();
   const { notifications, modals, toasts } = useUI();
@@ -19,8 +19,8 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col">
       {!isAuthPage && <Header />}
-      <main className="flex-1">
-        <Outlet />
+      <main className={`flex-1 ${isAuthPage ? '' : 'pt-16'}`}>
+        {children}
       </main>
       {!isAuthPage && <Footer />}
       

@@ -1,16 +1,18 @@
-import { ReactNode } from 'react';
+import { cloneElement, isValidElement } from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'danger' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
   isLoading?: boolean;
-  children: ReactNode;
+  asChild?: boolean;
+  children: any;
 }
 
 export const Button = ({
   variant = 'primary',
   size = 'md',
   isLoading = false,
+  asChild = false,
   children,
   className = '',
   disabled,
@@ -32,9 +34,18 @@ export const Button = ({
     lg: 'px-6 py-3 text-lg',
   };
   
+  const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`;
+
+  if (asChild && isValidElement(children)) {
+    return cloneElement(children, {
+      className: `${classes} ${children.props.className || ''}`.trim(),
+      ...props,
+    });
+  }
+
   return (
     <button
-      className={`${baseClasses} ${variantClasses[variant]} ${sizeClasses[size]} ${className}`}
+      className={classes}
       disabled={disabled || isLoading}
       {...props}
     >

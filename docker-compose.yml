@@ -49,6 +49,10 @@ services:
       - JWT_SECRET=${JWT_SECRET:-your-super-secret-jwt-key-change-in-production-min-32-chars}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-sk_test_mock}
       - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY:-pk_test_mock}
+      - RAZORPAY_KEY_ID=${RAZORPAY_KEY_ID:-rzp_test_demo_fs01000001}
+      - RAZORPAY_KEY_SECRET=${RAZORPAY_KEY_SECRET:-fs01_razorpay_demo_secret}
+      - RAZORPAY_DEMO=${RAZORPAY_DEMO:-true}
+      - RAZORPAY_CURRENCY=${RAZORPAY_CURRENCY:-USD}
       - MINIO_ENDPOINT=minio
       - MINIO_PORT=9000
       - MINIO_USE_SSL=false

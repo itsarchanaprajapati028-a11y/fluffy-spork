@@ -27,7 +27,7 @@ router.post('/', async (req, res) => {
     shippingAddress: req.body.shippingAddress || cart.shippingAddress,
     billingAddress: req.body.billingAddress || cart.shippingAddress,
     paymentMethod: req.body.paymentMethod || 'cod',
-    paymentStatus: req.body.paymentMethod === 'cod' ? 'pending' : 'paid',
+    paymentStatus: ['cod', 'razorpay'].includes(req.body.paymentMethod) ? 'pending' : 'paid',
     status: 'pending',
     subtotal: totals.subtotal,
     discount: totals.discount,

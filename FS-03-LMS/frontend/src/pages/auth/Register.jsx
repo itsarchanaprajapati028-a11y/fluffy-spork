@@ -50,18 +50,19 @@ export function Register() {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({});
+    const nextErrors = {};
     
-    if (!formData.firstName.trim()) setErrors({ firstName: 'First name is required' });
-    if (!formData.lastName.trim()) setErrors({ lastName: 'Last name is required' });
-    if (!formData.email.trim()) setErrors({ email: 'Email is required' });
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) setErrors({ email: 'Invalid email format' });
-    if (!formData.password) setErrors({ password: 'Password is required' });
-    else if (!validatePassword(formData.password)) setErrors({ password: 'Password must be at least 8 characters with uppercase, lowercase, number, and special character' });
-    if (formData.password !== formData.confirmPassword) setErrors({ confirmPassword: 'Passwords do not match' });
-    if (!formData.terms) setErrors({ terms: 'You must accept the terms and conditions' });
+    if (!formData.firstName.trim()) nextErrors.firstName = 'First name is required';
+    if (!formData.lastName.trim()) nextErrors.lastName = 'Last name is required';
+    if (!formData.email.trim()) nextErrors.email = 'Email is required';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) nextErrors.email = 'Invalid email format';
+    if (!formData.password) nextErrors.password = 'Password is required';
+    else if (!validatePassword(formData.password)) nextErrors.password = 'Password must be at least 8 characters with uppercase, lowercase, number, and special character';
+    if (formData.password !== formData.confirmPassword) nextErrors.confirmPassword = 'Passwords do not match';
+    if (!formData.terms) nextErrors.terms = 'You must accept the terms and conditions';
     
-    if (Object.keys(errors).length > 0) return;
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
     
     const result = await register({
       firstName: formData.firstName,

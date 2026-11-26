@@ -20,7 +20,25 @@ export function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
   
-  const from = (location.state as any)?.from?.pathname || '/';
+  const from = (location.state as any)?.from?.pathname || (location.state as any)?.from || '/';
+  const demoEmail = 'student@fs03.com';
+  const demoPassword = 'student123';
+  
+  const finishLogin = (result) => {
+    if (result.success) {
+      closeModal('login');
+      navigate(from, { replace: true });
+    } else {
+      setErrors({ form: result.error || 'Login failed' });
+    }
+  };
+  
+  const handleDemoLogin = async () => {
+    setErrors({});
+    setFormData({ email: demoEmail, password: demoPassword, remember: false });
+    const result = await login(demoEmail, demoPassword);
+    finishLogin(result);
+  };
   
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -30,19 +48,15 @@ export function Login() {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({});
+    const nextErrors = {};
     
-    if (!formData.email) setErrors({ email: 'Email is required' });
-    if (!formData.password) setErrors({ password: 'Password is required' });
-    if (Object.keys(errors).length > 0) return;
+    if (!formData.email) nextErrors.email = 'Email is required';
+    if (!formData.password) nextErrors.password = 'Password is required';
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
     
     const result = await login(formData.email, formData.password);
-    if (result.success) {
-      closeModal('login');
-      navigate(from, { replace: true });
-    } else {
-      setErrors({ form: result.error || 'Login failed' });
-    }
+    finishLogin(result);
   };
   
   return (
@@ -146,6 +160,23 @@ export function Login() {
               'Sign In'
             )}
           </Button>
+          
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-200" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-gray-50 text-gray-500">or</span>
+            </div>
+          </div>
+          
+          <Button type="button" variant="outline" className="w-full py-3 gap-2" onClick={handleDemoLogin} disabled={isLoading}>
+            <UserIcon className="h-5 w-5" />
+            Login as Demo
+          </Button>
+          <p className="text-center text-xs text-gray-500">
+            Demo account: {demoEmail} / {demoPassword}
+          </p>
         </form>
         
         <div className="relative">

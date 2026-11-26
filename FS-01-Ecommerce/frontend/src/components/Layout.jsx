@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useUI } from '../hooks/useUI';
@@ -11,7 +12,7 @@ import NotificationContainer from './NotificationContainer';
 import ToastContainer from './ToastContainer';
 import ModalManager from './ModalManager';
 
-export default function Layout() {
+export default function Layout({ children }) {
   const location = useLocation();
   const { isAuthenticated, fetchProfile } = useAuth();
   const { notifications, modals, toasts } = useUI();
@@ -19,11 +20,19 @@ export default function Layout() {
   
   const isAuthPage = ['/login', '/register', '/forgot-password', '/reset-password'].includes(location.pathname);
   
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchProfile();
+      fetchCart();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated]);
+  
   return (
     <div className="min-h-screen flex flex-col">
       {!isAuthPage && <Header />}
-      <main className="flex-1">
-        <Outlet />
+      <main className={`flex-1 ${isAuthPage ? '' : 'pt-16'}`}>
+        {children}
       </main>
       {!isAuthPage && <Footer />}
       

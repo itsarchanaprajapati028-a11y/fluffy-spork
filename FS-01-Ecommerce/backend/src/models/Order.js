@@ -33,6 +33,9 @@ const orderSchema = new mongoose.Schema(
     couponCode: { type: String, default: null },
     trackingData: { type: mongoose.Schema.Types.Mixed, default: {} },
     paymentIntentId: { type: String, default: null },
+    razorpayOrderId: { type: String, default: null },
+    razorpayPaymentId: { type: String, default: null },
+    razorpaySignature: { type: String, default: null },
   },
   { timestamps: true }
 );
